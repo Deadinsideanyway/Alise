@@ -1,14 +1,23 @@
+# coding: utf-8
+# Импортирует поддержку UTF-8.
+from __future__ import unicode_literals
+
+# Импортируем модули для работы с JSON и логами.
 import json
 import logging
-from flask import Flask, request
 
-app = Flask(__name__)
+# Импортируем подмодули Flask для запуска веб-сервиса.
+from flask import Flask, request
+application = Flask(__name__)
+
 
 logging.basicConfig(level=logging.DEBUG)
 
+# Хранилище данных о сессиях.
 sessionStorage = {}
 
-@app.route("/", methods=['POST'])
+# Задаем параметры приложения Flask.
+@application.route("/", methods=['POST'])
 
 def main():
 # Функция получает тело запроса и возвращает ответ.
@@ -32,6 +41,7 @@ def main():
         indent=2
     )
 
+# Функция для непосредственной обработки диалога.
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
 
@@ -41,13 +51,13 @@ def handle_dialog(req, res):
 
         sessionStorage[user_id] = {
             'suggests': [
-                "Подсказка",
-                "Не знаю",
-                "Test"
+                "Не хочу.",
+                "Не буду.",
+                "Отстань!",
             ]
         }
 
-        res['response']['text'] = 'Привет! Я показываю вам флаг страны, а вы называете её'
+        res['response']['text'] = 'Привет! Купи слона!'
         res['response']['buttons'] = get_suggests(user_id)
         return
 
@@ -68,6 +78,7 @@ def handle_dialog(req, res):
     )
     res['response']['buttons'] = get_suggests(user_id)
 
+# Функция возвращает две подсказки для ответа.
 def get_suggests(user_id):
     session = sessionStorage[user_id]
 
